@@ -5,9 +5,20 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKED_SUFFIXES = {'.doc', '.docx', '.pdf', '.csv', '.xlsx', '.db', '.sqlite',
-                    '.sqlite3', '.zip', '.7z', '.pem', '.key', '.log'}
+                    '.sqlite3', '.exe', '.apk', '.jks', '.keystore', '.zip', '.7z', '.pem', '.key', '.log'}
 BLOCKED_DIRS = {'probe_runs', 'submitted', 'submitted-screenshots', 'screenshots',
                 'output', 'outputs', 'demo-output', '__pycache__', '.venv'}
+
+
+
+def is_output_source(path):
+    """Allow only the five reviewed addon files inside an output package."""
+    allowed = {
+        ('output', '__init__.py'), ('output', 'manifest.py'),
+        ('output', 'pdf', '__init__.py'), ('output', 'pdf', 'direct.py'),
+        ('output', 'pdf', 'rendered.py'),
+    }
+    return 'output' in path.parts and path.parts[path.parts.index('output'):] in allowed
 
 
 def check():
@@ -16,7 +27,7 @@ def check():
     for name in filter(None, files):
         path = Path(name)
         if (path.suffix.lower() in BLOCKED_SUFFIXES or
-                BLOCKED_DIRS.intersection(path.parts) or
+                (BLOCKED_DIRS.intersection(path.parts) - ({'output'} if is_output_source(path) else set())) or
                 path.name in {'.env', 'ats_tuning.json'}):
             failures.append(f'{name}: private/runtime artifact')
             continue

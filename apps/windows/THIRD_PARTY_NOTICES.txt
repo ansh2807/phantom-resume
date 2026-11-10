@@ -1,0 +1,37 @@
+PhantomResume Desktop uses open-source components.
+
+PhantomResume: MIT (see LICENSE).
+PySide6 / Qt 6 / Shiboken: LGPLv3 or applicable commercial license.
+This build uses dynamically loaded Qt libraries from the official PySide6 wheels.
+License and source: https://www.qt.io/licensing/open-source-lgpl-obligations
+Qt source archives: https://download.qt.io/archive/qt/
+PySide source: https://code.qt.io/cgit/pyside/pyside-setup.git/
+Rebuilding instructions and this application's complete source accompany this EXE.
+You may replace/relink the Qt libraries by rebuilding with compatible wheels.
+
+Chromium: BSD-style license and third-party licenses. Browser ABOUT is included
+inside the bundle. Full notices are available through chrome://credits.
+Source: https://chromium.googlesource.com/chromium/src/
+Playwright: Apache-2.0. https://github.com/microsoft/playwright
+Python: PSF license. https://docs.python.org/3/license.html
+PyInstaller: GPL-2.0 with bootloader exception. https://pyinstaller.org/
+python-docx: MIT. https://github.com/python-openxml/python-docx
+docxcompose: MIT. https://github.com/4teamwork/docxcompose
+lxml: BSD-3-Clause, with libxml2/libxslt notices. https://lxml.de/
+PyPDF2: BSD-3-Clause. https://github.com/py-pdf/pypdf
+pdfplumber / pdfminer.six: MIT. https://github.com/jsvine/pdfplumber
+ReportLab: BSD-style. https://www.reportlab.com/opensource/
+Pillow: MIT-CMU. https://python-pillow.org/
+piexif: MIT. https://github.com/hMatoba/Piexif
+qrcode: BSD-style. https://github.com/lincolnloop/python-qrcode
+mutagen: GPL-2.0-or-later. https://github.com/quodlibet/mutagen
+fontTools: MIT. https://github.com/fonttools/fonttools
+pyzbar: MIT; bundled ZBar: LGPL-2.1. https://github.com/NaturalHistoryMuseum/pyzbar
+Requests: Apache-2.0. https://github.com/psf/requests
+Babel: BSD-3-Clause. https://github.com/python-babel/babel
+Colorama: BSD-3-Clause. https://github.com/tartley/colorama
+
+Because this distribution includes GPL-licensed Mutagen, redistribution of this
+combined desktop build must comply with the applicable GPL terms. The complete
+application source is supplied; original component licenses remain in effect.
+Third-party package license texts are included in the source archive under licenses/.

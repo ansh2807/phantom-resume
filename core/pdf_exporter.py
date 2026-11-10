@@ -26,6 +26,39 @@ except ImportError:
     HAS_REPORTLAB = False
 
 
+import zipfile
+from xml.etree import ElementTree as ET
+
+DC_NS = "http://purl.org/dc/elements/1.1/"
+CP_NS = "http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
+
+
+def _read_core_props(docx_path):
+    out = {}
+    try:
+        with zipfile.ZipFile(docx_path) as z:
+            if "docProps/core.xml" not in z.namelist():
+                return out
+            root = ET.fromstring(z.read("docProps/core.xml"))
+    except Exception:
+        return out
+
+    def get(local, *namespaces):
+        for ns in namespaces:
+            el = root.find(f"{{{ns}}}{local}")
+            if el is not None and el.text:
+                return el.text
+        return None
+
+    out["title"]    = get("title",    DC_NS, CP_NS)
+    out["subject"]  = get("subject",  DC_NS, CP_NS)
+    out["author"]   = get("creator",  DC_NS, CP_NS)
+    out["keywords"] = get("keywords", CP_NS)
+    out["comments"] = get("description", DC_NS, CP_NS)
+    out["category"] = get("category", CP_NS)
+    return {k: v for k, v in out.items() if v}
+
+
 class PDFExporter:
     def __init__(self, docx_path, pdf_path, keep_metadata=True):
         self.docx = Path(docx_path)
@@ -59,16 +92,8 @@ class PDFExporter:
         import io
         from PIL import Image as PILImage
 
+        metadata = _read_core_props(self.docx)
         with zipfile.ZipFile(self.docx, 'r') as z:
-            metadata = {}
-            if 'docProps/core.xml' in z.namelist():
-                core = z.read('docProps/core.xml').decode('utf-8', errors='ignore')
-                for tag in ['title', 'subject', 'description', 'keywords',
-                            'category', 'creator', 'lastModifiedBy']:
-                    m = re.search(rf'<{tag}[^>]*>(.*?)</{tag}>', core, flags=re.S)
-                    if m:
-                        metadata[tag] = unescape(m.group(1))
-
             body_xml = ''
             if 'word/document.xml' in z.namelist():
                 body_xml = z.read('word/document.xml').decode('utf-8', errors='ignore')
@@ -98,7 +123,7 @@ class PDFExporter:
             topMargin=0.7*inch, bottomMargin=0.7*inch,
             title=metadata.get('title', '') or 'Resume',
             subject=metadata.get('subject', '') or 'Resume',         # fix #9
-            author=metadata.get('creator', '') or 'Candidate',
+            author=metadata.get('author', '') or 'Candidate',
             keywords=metadata.get('keywords', '') or 'resume',       # fix #9
             creator='PhantomResume',
         )

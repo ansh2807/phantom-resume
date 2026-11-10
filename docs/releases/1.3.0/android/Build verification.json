@@ -1,0 +1,27 @@
+{
+  "version": "1.3.0",
+  "artifact": "PhantomResume Android.apk",
+  "bytes": 46000466,
+  "sha256": "7cb5c1485d6ec1735303350d9d47ce62ac064ea1b534beebf80512de928237c5",
+  "checks_passed": 40,
+  "checks_failed": 0,
+  "source_update": "Original-project PDF/font/audio fixes and addon modules; platform adaptations retained",
+  "addon_smoke_checks": 7,
+  "full_original_166_case_audit_rerun": false,
+  "limitations": [
+    "Addon API configures no document channels",
+    "No live ATS submission or screening effectiveness verified",
+    "Four addon modules remain unimplemented",
+    "WebM scoped tag is MOVIE/TITLE in tested parser"
+  ],
+  "code_protection": "Native Windows core; Python addon bytecode. Android R8 plus Python bytecode. Neither is reverse-engineering proof.",
+  "signed": "Same local release key as 1.2; signature verified",
+  "abis": [
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "tested_device_abi": "arm64-v8a",
+  "installed_update_on_connected_phone": true,
+  "back_closes_app_process": true,
+  "services_after_back": "none"
+}

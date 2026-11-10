@@ -36,6 +36,22 @@ PhantomResume is a Python toolkit for inspecting resumes and studying how docume
 
 **Experimental research software.** An injected string appearing in a local file does not prove that an ATS reads it, follows it, or changes a hiring decision. Scores and channel weights are heuristics. Use synthetic documents and systems you control or have permission to test.
 
+## Desktop and Android · 1.3
+
+Download the [Windows EXE and Android APK](https://github.com/ansh2807/phantom-resume/releases/tag/v1.3.0).
+The animated interfaces retain the original tools and add local addon verification.
+
+- Windows: **78 packaged acceptance checks passed**; cancellation and shutdown tested.
+- Android: **40 checks passed on an ARM64 phone**; signed update and Back-to-close tested.
+- Includes PDF, font, FLAC/WebM repairs and the addon modules.
+- [Build evidence and limitations](docs/releases/1.3.0/README.md).
+- Build sources: [Windows](apps/windows/README-DESKTOP.md) · [Android](apps/android/README.md).
+
+The recorded source audit has **166 passed, 0 failed, 7 not run**. It is a
+separate historical run, not proof of every feature or live ATS effectiveness.
+The addon API configures no document channels; manifest/tracker success does
+not establish payload recovery. Four planned modules remain unimplemented.
+
 ## Quick start
 
 ```bash

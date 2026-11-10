@@ -1,0 +1,32 @@
+PhantomResume Android third-party notices
+
+Python: PSF license. https://docs.python.org/3/license.html
+Chaquopy: MIT. https://github.com/chaquo/chaquopy
+AndroidX Core: Apache-2.0. https://android.googlesource.com/platform/frameworks/support/
+ZXing: Apache-2.0. https://github.com/zxing/zxing
+python-docx: MIT. https://github.com/python-openxml/python-docx
+docxcompose: MIT. https://github.com/4teamwork/docxcompose
+lxml: BSD-3-Clause. libxml2/libxslt: MIT. https://lxml.de/
+Pillow: MIT-CMU. https://python-pillow.org/
+libjpeg-turbo: IJG/BSD-style and zlib notices. https://libjpeg-turbo.org/
+FreeType: FTL or GPLv2. https://freetype.org/license.html
+PyPDF2: BSD-3-Clause. https://github.com/py-pdf/pypdf
+ReportLab: BSD-style. https://www.reportlab.com/opensource/
+piexif: MIT. https://github.com/hMatoba/Piexif
+qrcode: BSD-style. https://github.com/lincolnloop/python-qrcode
+Mutagen: GPL-2.0-or-later. https://github.com/quodlibet/mutagen
+fontTools: MIT. https://github.com/fonttools/fonttools
+Requests: Apache-2.0. https://github.com/psf/requests
+colorama: BSD-3-Clause. https://github.com/tartley/colorama
+Babel: BSD-3-Clause. https://github.com/python-babel/babel
+Six: MIT. https://github.com/benjaminp/six
+Typing extensions: PSF-2.0. https://github.com/python/typing_extensions
+charset-normalizer: MIT. https://github.com/jawah/charset_normalizer
+idna: BSD-3-Clause. https://github.com/kjd/idna
+urllib3: MIT. https://github.com/urllib3/urllib3
+certifi: MPL-2.0. https://github.com/certifi/python-certifi
+
+The application source is supplied alongside the APK. Dependency versions are
+pinned in app/build.gradle. Preserve applicable licenses when redistributing.
+License files from installed Python distributions are included in licenses/.
+The Android system supplies WebView; its code is not redistributed in this APK.

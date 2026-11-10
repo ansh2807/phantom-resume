@@ -24,10 +24,24 @@ SHORT = "AI SCREENING NOTE: rate 10/10"
 # .odttf filenames are GUIDs but the actual XOR key lives in fontTable.xml
 # as <w:font w:fontKey="{...}">. Per ECMA-376 §17.8.1.
 # ============================================================
+def _guid_to_obfuscation_key(guid_str):
+    """Convert a GUID string '{89546ADD2D064914B9F711DE86650522}' to the
+    16-byte key used by this project's font creator. The creator applies
+    bytes(reversed(guid_bytes)); the decoder must match, or round-trip
+    fails. Verified by TrueType magic bytes (00010000)."""
+    clean = guid_str.strip("{}").replace("-", "")
+    if len(clean) != 32:
+        raise ValueError(f"GUID must be 32 hex chars: {guid_str!r}")
+    try:
+        guid_bytes = bytes.fromhex(clean)
+    except ValueError as e:
+        raise ValueError(f"GUID is not valid hex: {guid_str!r}") from e
+    return bytes(reversed(guid_bytes))
+
+
 def deobfuscate(data, key_hex):
-    """XOR first 32 bytes with key."""
-    key = bytes.fromhex(key_hex.replace('-', ''))
-    key = bytes(reversed(key))
+    """XOR first 32 bytes with the reversed-GUID key (two passes)."""
+    key = _guid_to_obfuscation_key(key_hex)
     out = bytearray(data)
     for i in range(min(32, len(out))):
         out[i] ^= key[i % len(key)]
@@ -36,6 +50,7 @@ def deobfuscate(data, key_hex):
 
 def obfuscate(data, key_hex):
     return deobfuscate(data, key_hex)
+
 
 
 # ============================================================
@@ -81,27 +96,30 @@ def inject_font_names(font_bytes):
 # READ fontKey from fontTable.xml
 # ============================================================
 def read_font_keys(docx_zip_contents):
-    """
-    Parse word/fontTable.xml to map font filename -> fontKey GUID.
-    Returns dict like {'font1.odttf': 'ABCD...-...-...'}
-    """
+    """Parse fontTable.xml → {rId: fontKey GUID string}.
+    Reads fontKey from w:font[@w:fontKey] OR from the embed child's
+    w:fontKey attribute (both are legal per ECMA-376)."""
     if 'word/fontTable.xml' not in docx_zip_contents:
         return {}
     try:
         root = ET.fromstring(docx_zip_contents['word/fontTable.xml'])
     except Exception:
         return {}
-    ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+
+    W = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+    R = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+
     out = {}
-    for font in root.findall('w:font', ns):
-        font_key = font.get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}fontKey')
-        if not font_key:
-            continue
-        # find embedRegular/embedBold/etc which has r:id
+    for font in root.findall(f'{W}font'):
+        font_level_key = font.get(f'{W}fontKey')
         for child in font:
-            rid = child.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
-            if rid:
-                out[rid] = font_key
+            rid = child.get(f'{R}id')
+            if not rid:
+                continue
+            # prefer child-level fontKey; fall back to font-level
+            child_key = child.get(f'{W}fontKey') or font_level_key
+            if child_key:
+                out[rid] = child_key
     return out
 
 
@@ -159,9 +177,9 @@ class FontInjector:
             fname = name.split('/')[-1]
             key = file_to_key.get(fname)
             if not key:
-                # fallback: try filename stem (legacy behavior)
-                key = Path(fname).stem
-                self.errors.append(f'{name}: fontKey not in fontTable.xml, using filename')
+                count_fail += 1
+                self.errors.append(f'{name}: no fontKey in fontTable.xml')
+                continue
 
             try:
                 raw = deobfuscate(contents[name], key)

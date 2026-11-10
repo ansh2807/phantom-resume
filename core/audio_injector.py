@@ -94,16 +94,44 @@ def inject_mp4(data):
 # FLAC — save back to BytesIO properly
 # ============================================================
 def inject_flac(data):
+    """Write Vorbis Comments via Mutagen. Mutagen's FLAC.save(path)
+    requires a valid FLAC file at that path to update in place — it
+    does NOT create from scratch. Copy the input to a temp file, load
+    it, set tags, save back to the same file, read out."""
+    import shutil
+    import tempfile
+    from pathlib import Path
+
     try:
-        bio = io.BytesIO(data)
-        f = FLAC(bio)
-        f['comment'] = INSTRUCTION
-        f['description'] = INSTRUCTION
-        f['AI_SCREENING'] = INSTRUCTION
-        f.save(bio)
-        return bio.getvalue()
-    except Exception:
-        return data
+        with tempfile.NamedTemporaryFile(suffix=".flac", delete=False) as tmp:
+            tmp.write(data)
+            tmp_path = tmp.name
+
+        try:
+            # sanity check before letting Mutagen touch it
+            with open(tmp_path, "rb") as fh:
+                if fh.read(4) != b"fLaC":
+                    raise RuntimeError("input is not valid FLAC")
+
+            f = FLAC(tmp_path)
+
+            # Mutagen's Vorbis Comment API: List[str] values
+            f['comment'] = [INSTRUCTION]
+            f['description'] = [INSTRUCTION]
+            f['AI_SCREENING'] = [INSTRUCTION]
+
+            # save back to the SAME file — valid FLAC, in-place update
+            f.save()
+
+            with open(tmp_path, "rb") as fh:
+                return fh.read()
+        finally:
+            try:
+                Path(tmp_path).unlink()
+            except Exception:
+                pass
+    except Exception as e:
+        raise RuntimeError(f"FLAC write failed: {e}") from e
 
 
 # ============================================================
@@ -156,42 +184,117 @@ def _ebml_element(elem_id, payload):
 
 
 def inject_webm(data):
-    """
-    Insert a Tags element with a SimpleTag near the start of the Segment.
-    Minimal injection — appends after the Segment header.
-    Not fully spec-pure but widely tolerated by parsers/players.
-    """
+    """Merge a TITLE SimpleTag into the FIRST Tags element in Segment,
+    and drop any subsequent Tags elements (ffprobe reads only the first).
+    If no Tags exists, insert one before the first Cluster. Rewrites
+    Segment size after all edits."""
     try:
-        if data[:4] != b'\x1a\x45\xdf\xa3':  # EBML magic
+        if data[:4] != b'\x1a\x45\xdf\xa3':
             return data
 
-        # Build a Tags element:
-        #   Tags (id 0x1254C367)
-        #     Tag (0x7373)
-        #       Targets (0x63C0) — empty
-        #       SimpleTag (0x67C8)
-        #         TagName (0x45A3) = "COMMENT"
-        #         TagString (0x4487) = INSTRUCTION
-        tag_name = _ebml_element(b'\x45\xa3', b'COMMENT')
-        tag_string = _ebml_element(b'\x44\x87', INSTRUCTION.encode('utf-8'))
-        simple_tag = _ebml_element(b'\x67\xc8', tag_name + tag_string)
-        targets = _ebml_element(b'\x63\xc0', b'')
-        tag = _ebml_element(b'\x73\x73', targets + simple_tag)
-        tags = _ebml_element(b'\x12\x54\xc3\x67', tag)
+        SEGMENT_ID = b'\x18\x53\x80\x67'
+        CLUSTER_ID = b'\x1f\x43\xb6\x75'
+        TAGS_ID    = b'\x12\x54\xc3\x67'
 
-        # insert right after the EBML header
-        # find Segment start (0x18538067)
-        seg = data.find(b'\x18\x53\x80\x67', 4)
+        def read_vint(buf, pos):
+            first = buf[pos]
+            length = 1
+            for i in range(8):
+                if first & (1 << (7 - i)):
+                    length = i + 1
+                    break
+            value = first & (0xFF >> length)
+            for j in range(1, length):
+                value = (value << 8) | buf[pos + j]
+            return value, length
+
+        seg = data.find(SEGMENT_ID, 4)
         if seg == -1:
             return data
-        # insert Tags immediately after Segment header (which is at seg..seg+8 approx)
-        # safer: insert after first element following Segment header — approximate
-        insert_at = seg + 4 + 1  # assume 1-byte size for simplicity... risky
-        # better: just append Tags before end of file — tolerant parsers handle
-        # this is intentionally simple; a full EBML parser is out of scope
-        return data + tags
-    except Exception:
-        return data
+
+        size_start = seg + len(SEGMENT_ID)
+        seg_size, size_len = read_vint(data, size_start)
+        seg_children_start = size_start + size_len
+        seg_end = seg_children_start + seg_size
+
+        # --- build our TITLE Tag bytes ---
+        targets = _ebml_element(
+            b'\x63\xc0',
+            _ebml_element(b'\x63\xca', b'MOVIE')
+            + _ebml_element(b'\x68\xca', b'\x32'),
+        )
+        tag_name   = _ebml_element(b'\x45\xa3', b'TITLE')
+        tag_string = _ebml_element(b'\x44\x87', INSTRUCTION.encode('utf-8'))
+        simple_tag = _ebml_element(b'\x67\xc8', tag_name + tag_string)
+        new_tag    = _ebml_element(b'\x73\x73', targets + simple_tag)
+
+        # --- find all Tags elements inside Segment ---
+        tags_found = []
+        search_from = seg_children_start
+        while search_from < seg_end:
+            pos = data.find(TAGS_ID, search_from, seg_end)
+            if pos < 0:
+                break
+            try:
+                sz_pos = pos + len(TAGS_ID)
+                sz, sz_len = read_vint(data, sz_pos)
+                el_end = sz_pos + sz_len + sz
+                if el_end <= seg_end:
+                    tags_found.append((pos, sz_pos, sz_len, el_end))
+                    search_from = el_end
+                else:
+                    search_from = pos + 1
+            except Exception:
+                search_from = pos + 1
+
+        delta = 0
+        if tags_found:
+            # merge into first Tags
+            pos0, sz_pos0, sz_len0, end0 = tags_found[0]
+            old_payload = data[sz_pos0 + sz_len0:end0]
+            new_tags_el = _ebml_element(TAGS_ID, old_payload + new_tag)
+            delta = len(new_tags_el) - (end0 - pos0)
+            new_data = data[:pos0] + new_tags_el + data[end0:]
+            new_seg_end = seg_end + delta
+
+            # strip any subsequent Tags elements
+            for pos_i, sz_pos_i, sz_len_i, end_i in tags_found[1:]:
+                # recompute positions in new_data after the first edit
+                # (positions after pos0 shift by delta)
+                shift = delta if pos_i > pos0 else 0
+                real_pos = pos_i + shift
+                real_end = end_i + shift
+                # verify the TAGS_ID still starts there
+                if new_data[real_pos:real_pos + len(TAGS_ID)] != TAGS_ID:
+                    # position drifted; search nearby
+                    real_pos = new_data.find(TAGS_ID, real_pos - 32, real_end + 32)
+                    if real_pos < 0:
+                        continue
+                    real_end = real_pos + (end_i - pos_i)
+                removed = real_end - real_pos
+                new_data = new_data[:real_pos] + new_data[real_end:]
+                delta -= removed
+                new_seg_end -= removed
+        else:
+            # insert fresh Tags before first Cluster (or at end)
+            cluster = data.find(CLUSTER_ID, seg_children_start, seg_end)
+            insert_at = cluster if cluster >= 0 else seg_end
+            new_tags_el = _ebml_element(TAGS_ID, new_tag)
+            delta = len(new_tags_el)
+            new_data = data[:insert_at] + new_tags_el + data[insert_at:]
+
+        # --- update Segment size ---
+        new_seg_size = seg_size + delta
+        new_seg_size_bytes = _ebml_vint(new_seg_size, size_len)
+        new_data = (
+            new_data[:size_start]
+            + new_seg_size_bytes
+            + new_data[size_start + size_len:]
+        )
+
+        return new_data
+    except Exception as e:
+        raise RuntimeError(f"webm inject failed: {e}") from e
 
 
 # ============================================================

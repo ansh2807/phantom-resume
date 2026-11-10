@@ -24,7 +24,7 @@ probe_runs/
 submitted/
 submitted-screenshots/
 screenshots/
-output/
+/output/
 outputs/
 phantom_output/
 demo-output/
@@ -44,3 +44,17 @@ dist/
 Thumbs.db
 .idea/
 .vscode/
+
+# Addon output is a source package; generated outputs remain ignored.
+!/output/
+/output/*
+!/output/*.py
+!/output/pdf/
+/output/pdf/*
+!/output/pdf/*.py
+*.exe
+*.apk
+*.jks
+*.keystore
+local.properties
+.gradle/

@@ -1,0 +1,396 @@
+{
+  "passed": 78,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Resume review and suggestions",
+      "passed": true,
+      "seconds": 0.11
+    },
+    {
+      "name": "Inspector reads namespaced metadata and image",
+      "passed": true,
+      "seconds": 0.08
+    },
+    {
+      "name": "All default nuclear channels + QR + PDF",
+      "passed": true,
+      "seconds": 2.45
+    },
+    {
+      "name": "Original photo pixels preserved",
+      "passed": true,
+      "seconds": 0.03
+    },
+    {
+      "name": "Individual channel selection",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Empty custom plan makes an unchanged copy",
+      "passed": true,
+      "seconds": 0.08
+    },
+    {
+      "name": "Full pipeline",
+      "passed": true,
+      "seconds": 0.39
+    },
+    {
+      "name": "Portable PDF escaping, images and extraction",
+      "passed": true,
+      "seconds": 0.12
+    },
+    {
+      "name": "PDF preserves hidden text color",
+      "passed": true,
+      "seconds": 0.3
+    },
+    {
+      "name": "Cover letter draft + PDF",
+      "passed": true,
+      "seconds": 0.12
+    },
+    {
+      "name": "Cover letter injection",
+      "passed": true,
+      "seconds": 0.14
+    },
+    {
+      "name": "Batch processor",
+      "passed": true,
+      "seconds": 0.31
+    },
+    {
+      "name": "Document comparison",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Randomized channel plan is applied",
+      "passed": true,
+      "seconds": 0.36
+    },
+    {
+      "name": "Deep metadata including ZIP comment",
+      "passed": true,
+      "seconds": 0.14
+    },
+    {
+      "name": "Embedded font generation",
+      "passed": true,
+      "seconds": 0.14
+    },
+    {
+      "name": "Embedded font deobfuscation and reinjection",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "name": "Dedicated injection tool: metadata",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: hidden_text",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: comments",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: zero_width",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: headers_footers",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: fields",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: split_payload",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: base64",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: acrostic",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: fake_recruiter",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: whitespace",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Dedicated injection tool: image",
+      "passed": true,
+      "seconds": 0.11
+    },
+    {
+      "name": "Dedicated injection tool: audio",
+      "passed": true,
+      "seconds": 0.11
+    },
+    {
+      "name": "Dedicated injection tool: qr",
+      "passed": true,
+      "seconds": 0.11
+    },
+    {
+      "name": "Dedicated injection tool: font",
+      "passed": true,
+      "seconds": 0.14
+    },
+    {
+      "name": "Individual deep metadata: theme",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Individual deep metadata: numbering",
+      "passed": true,
+      "seconds": 0.08
+    },
+    {
+      "name": "Individual deep metadata: settings",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Individual deep metadata: custom_properties",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Individual deep metadata: zip_comment",
+      "passed": true,
+      "seconds": 0.11
+    },
+    {
+      "name": "Lossless DOCX image encoding",
+      "passed": true,
+      "seconds": 0.73
+    },
+    {
+      "name": "DOCX image decoding",
+      "passed": true,
+      "seconds": 0.09
+    },
+    {
+      "name": "Standalone image encoding",
+      "passed": true,
+      "seconds": 0.01
+    },
+    {
+      "name": "Merge retains both documents and media",
+      "passed": true,
+      "seconds": 0.25
+    },
+    {
+      "name": "Font styling",
+      "passed": true,
+      "seconds": 0.11
+    },
+    {
+      "name": "Language pack en",
+      "passed": true,
+      "seconds": 0.06
+    },
+    {
+      "name": "Language pack hi",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Language pack es",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Language pack fr",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "name": "Language pack de",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Language pack ja",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Language pack ar",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "name": "Language pack zh",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Payload transform base64",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Payload transform whitespace",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Payload transform cyrillic",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Payload transform devanagari",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Payload transform combining",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Portal note variant D",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Extraction markers",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Read heuristic tuning weights",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "name": "Import tuning observations",
+      "passed": true,
+      "seconds": 0.03
+    },
+    {
+      "name": "Create local journal entry",
+      "passed": true,
+      "seconds": 0.23
+    },
+    {
+      "name": "Update local journal outcome",
+      "passed": true,
+      "seconds": 0.03
+    },
+    {
+      "name": "Missing input produces actionable error",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Image capacity check prevents truncation",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "name": "MP3 ID3 metadata fixture",
+      "passed": true,
+      "seconds": 0.02
+    },
+    {
+      "name": "ATS markup fingerprint on controlled page",
+      "passed": true,
+      "seconds": 0.08
+    },
+    {
+      "name": "Bundled browser read-only inspection",
+      "passed": true,
+      "seconds": 29.78
+    },
+    {
+      "name": "Browser stops at login",
+      "passed": true,
+      "seconds": 17.75
+    },
+    {
+      "name": "No Apply click or POST during inspection",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Original resume bytes unchanged",
+      "passed": true,
+      "seconds": 0.03
+    },
+    {
+      "name": "Native UI: all 38 tools, channel selection, background run and compact layout",
+      "passed": true,
+      "seconds": 9.72
+    },
+    {
+      "name": "Repeated isolated runs release workers; cache is bounded; idle timers stop",
+      "passed": true,
+      "seconds": 6.67
+    },
+    {
+      "name": "Preview caps large strings and lists",
+      "passed": true,
+      "seconds": 0.0
+    },
+    {
+      "name": "Oversized document archive rejected before processing",
+      "passed": true,
+      "seconds": 0.22
+    },
+    {
+      "name": "Cancel kills owned browser tree and marks partial output",
+      "passed": true,
+      "seconds": 9.48
+    },
+    {
+      "name": "Fresh idle app measurement and normal close leaves no processes",
+      "passed": true,
+      "seconds": 10.94
+    },
+    {
+      "name": "Close during browser work stops worker and browser descendants",
+      "passed": true,
+      "seconds": 6.78
+    },
+    {
+      "name": "Unexpected UI process death kills its owned browser job",
+      "passed": true,
+      "seconds": 9.78
+    },
+    {
+      "name": "Addon local checks via application engine",
+      "passed": true,
+      "seconds": 3.64
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "passed": 40,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "review",
+      "passed": true
+    },
+    {
+      "name": "inspect",
+      "passed": true
+    },
+    {
+      "name": "full",
+      "passed": true
+    },
+    {
+      "name": "pdf",
+      "passed": true
+    },
+    {
+      "name": "deep",
+      "passed": true
+    },
+    {
+      "name": "font",
+      "passed": true
+    },
+    {
+      "name": "style",
+      "passed": true
+    },
+    {
+      "name": "cover_inject",
+      "passed": true
+    },
+    {
+      "name": "inject",
+      "passed": true
+    },
+    {
+      "name": "stealth",
+      "passed": true
+    },
+    {
+      "name": "channel_metadata",
+      "passed": true
+    },
+    {
+      "name": "channel_hidden_text",
+      "passed": true
+    },
+    {
+      "name": "channel_comments",
+      "passed": true
+    },
+    {
+      "name": "channel_zero_width",
+      "passed": true
+    },
+    {
+      "name": "channel_headers_footers",
+      "passed": true
+    },
+    {
+      "name": "channel_fields",
+      "passed": true
+    },
+    {
+      "name": "channel_split_payload",
+      "passed": true
+    },
+    {
+      "name": "channel_base64",
+      "passed": true
+    },
+    {
+      "name": "channel_acrostic",
+      "passed": true
+    },
+    {
+      "name": "channel_fake_recruiter",
+      "passed": true
+    },
+    {
+      "name": "channel_whitespace",
+      "passed": true
+    },
+    {
+      "name": "channel_image",
+      "passed": true
+    },
+    {
+      "name": "channel_audio",
+      "passed": true
+    },
+    {
+      "name": "channel_qr",
+      "passed": true
+    },
+    {
+      "name": "channel_font",
+      "passed": true
+    },
+    {
+      "name": "cover",
+      "passed": true
+    },
+    {
+      "name": "batch",
+      "passed": true
+    },
+    {
+      "name": "lsb",
+      "passed": true
+    },
+    {
+      "name": "merge",
+      "passed": true
+    },
+    {
+      "name": "diff",
+      "passed": true
+    },
+    {
+      "name": "payloads",
+      "passed": true
+    },
+    {
+      "name": "notes",
+      "passed": true
+    },
+    {
+      "name": "extraction",
+      "passed": true
+    },
+    {
+      "name": "tuning",
+      "passed": true
+    },
+    {
+      "name": "track",
+      "passed": true
+    },
+    {
+      "name": "ats",
+      "passed": true
+    },
+    {
+      "name": "probe",
+      "passed": true
+    },
+    {
+      "name": "audio metadata round trip",
+      "passed": true
+    },
+    {
+      "name": "original document unchanged",
+      "passed": true
+    },
+    {
+      "name": "addon local checks",
+      "passed": true
+    }
+  ]
+}
